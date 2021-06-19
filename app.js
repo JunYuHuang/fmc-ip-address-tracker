@@ -1,5 +1,6 @@
 import { ipifyApiURLWithKey } from "./apis/ipify.js";
 import { leafletjsApiURLWithKey } from "./apis/leafletjs.js";
+const CORS_PROXY_SERVER_URL = "https://cors-anywhere-jyhuang.herokuapp.com/";
 
 // DOM
 const searchForm = document.querySelector(".form-group");
@@ -26,9 +27,6 @@ function updateDisplayInfo(
   resultTimeZoneContent.textContent = resultTimeZone;
   resultISPContent.textContent = resultISP;
 }
-
-// CORS proxy server
-let CORS_PROXY_SERVER_URL = "https://cors-anywhere.herokuapp.com/";
 
 // Leafletjs Map API
 // default map area is around "Brooklyn, NY 10001"
@@ -60,8 +58,10 @@ function updateMapAreaAndMarker(latitude, longitude) {
 
 // regex consts
 const IPV4_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
-const IPV6_REGEX = /^([0-9A-Fa-f]{0,4}:){2,7}([0-9A-Fa-f]{1,4}$|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4})$/;
-const URL_DOMAIN_REGEX = /^(?!\-)(?:(?:[a-zA-Z\d][a-zA-Z\d\-]{0,61})?[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/;
+const IPV6_REGEX =
+  /^([0-9A-Fa-f]{0,4}:){2,7}([0-9A-Fa-f]{1,4}$|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4})$/;
+const URL_DOMAIN_REGEX =
+  /^(?!\-)(?:(?:[a-zA-Z\d][a-zA-Z\d\-]{0,61})?[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/;
 
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -86,7 +86,8 @@ searchForm.addEventListener("submit", (e) => {
       .then((res) => {
         // update text info
         let ipAddress = res.ip;
-        // location format doesn't match mock-ups but I'm too lazy to implement a full state/province to its abbreviation converter
+
+        // location format
         let location = `${res.location.city}, ${res.location.country} ${res.location.postalCode}`;
         let timezone = `UTC ${res.location.timezone}`;
         let isp = res.isp;
